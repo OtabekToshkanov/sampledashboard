@@ -1,0 +1,21 @@
+spring:
+  datasource:
+    url: jdbc:clickhouse://localhost:8123/default?user=default&password=&ssl=false&compress=false
+    username: default
+    password: ""
+    driver-class-name: com.clickhouse.jdbc.ClickHouseDriver
+    hikari:
+      connection-test-query: SELECT 1
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+      maximum-pool-size: 10
+      minimum-idle: 5
+
+server:
+  port: 8080
+
+logging:
+  level:
+    com.clickhouse: DEBUG
+    org.springframework.jdbc: DEBUG

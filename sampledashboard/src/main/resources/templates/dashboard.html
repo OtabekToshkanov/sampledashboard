@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClickHouse Analytics Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section {
+            background: white;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .section h2 {
+            color: #333;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #667eea;
+            color: white;
+            font-weight: bold;
+        }
+
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+
+        .metric {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            margin: 5px;
+            text-align: center;
+        }
+
+        .metric-value {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .metric-label {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+
+        .positive {
+            color: #28a745;
+        }
+
+        .negative {
+            color: #dc3545;
+        }
+
+        .neutral {
+            color: #6c757d;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>📊 ClickHouse Analytics Dashboard</h1>
+        <p>Real-time insights from mdeal_headers table</p>
+    </div>
+
+    <!-- Deal Summary Section -->
+    <div class="section">
+        <h2>📈 Deal Summary by Type</h2>
+        <table>
+            <thead>
+            <tr>
+                <th>Deal Kind</th>
+                <th>Deal Type</th>
+                <th>Total Deals</th>
+                <th>Total Amount</th>
+                <th>Average Amount</th>
+                <th>Status Info</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="deal : ${dealSummary}">
+                <td th:text="${deal.dealKind}"></td>
+                <td th:text="${deal.dealType}"></td>
+                <td th:text="${deal.totalDeals}"></td>
+                <td th:text="${#numbers.formatDecimal(deal.totalAmount, 1, 'COMMA', 2, 'POINT')}"
+                    th:class="${deal.totalAmount >= 0} ? 'positive' : 'negative'"></td>
+                <td th:text="${#numbers.formatDecimal(deal.avgAmount, 1, 'COMMA', 2, 'POINT')}"
+                    th:class="${deal.avgAmount >= 0} ? 'positive' : 'negative'"></td>
+                <td th:text="${deal.status}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Daily Sales Section -->
+    <div class="section">
+        <h2>📅 Daily Sales Performance</h2>
+        <table>
+            <thead>
+            <tr>
+                <th>Deal Date</th>
+                <th>Total Deals</th>
+                <th>Total Revenue</th>
+                <th>Average Deal Size</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="daily : ${dailySales}">
+                <td th:text="${#temporals.format(daily.dealDate, 'yyyy-MM-dd')}"></td>
+                <td th:text="${daily.totalDeals}"></td>
+                <td th:text="${#numbers.formatDecimal(daily.totalRevenue, 1, 'COMMA', 2, 'POINT')}"
+                    class="positive"></td>
+                <td th:text="${#numbers.formatDecimal(daily.avgDealSize, 1, 'COMMA', 2, 'POINT')}"
+                    class="neutral"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Company Analytics Section -->
+    <div class="section">
+        <h2>🏢 Company Performance Analytics</h2>
+        <table>
+            <thead>
+            <tr>
+                <th>Company ID</th>
+                <th>Total Deals</th>
+                <th>Total Revenue</th>
+                <th>Avg Deal Size</th>
+                <th>Returns Count</th>
+                <th>Return Rate (%)</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="company : ${companyAnalytics}">
+                <td th:text="${company.companyId}"></td>
+                <td th:text="${company.totalDeals}"></td>
+                <td th:text="${#numbers.formatDecimal(company.totalRevenue, 1, 'COMMA', 2, 'POINT')}"
+                    class="positive"></td>
+                <td th:text="${#numbers.formatDecimal(company.avgDealSize, 1, 'COMMA', 2, 'POINT')}"
+                    class="neutral"></td>
+                <td th:text="${company.returnsCount}"
+                    th:class="${company.returnsCount > 0} ? 'negative' : 'neutral'"></td>
+                <td th:text="${#numbers.formatDecimal(company.returnRate, 1, 'COMMA', 1, 'POINT')}"
+                    th:class="${company.returnRate > 10} ? 'negative' : (${company.returnRate > 5} ? 'neutral' : 'positive')"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Quick Metrics -->
+    <div class="section">
+        <h2>⚡ Quick Metrics</h2>
+        <div th:if="${not #lists.isEmpty(dealSummary)}">
+            <div class="metric">
+                <div class="metric-value"
+                     th:text="${dealSummary[0].totalDeals + (dealSummary.size() > 1 ? dealSummary[1].totalDeals : 0)}"></div>
+                <div class="metric-label">Total Transactions</div>
+            </div>
+            <div class="metric">
+                <div class="metric-value"
+                     th:text="${#numbers.formatDecimal(dealSummary[0].totalAmount + (dealSummary.size() > 1 ? dealSummary[1].totalAmount : 0), 1, 'COMMA', 0, 'POINT')}"></div>
+                <div class="metric-label">Net Revenue</div>
+            </div>
+            <div class="metric" th:if="${companyAnalytics.size() > 0}">
+                <div class="metric-value" th:text="${companyAnalytics.size()}"></div>
+                <div class="metric-label">Active Companies</div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
