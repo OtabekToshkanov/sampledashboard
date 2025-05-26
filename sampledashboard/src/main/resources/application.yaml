@@ -1,4 +1,6 @@
 spring:
+  config:
+    import: 'optional:file:.env[.properties]'
   datasource:
     url: jdbc:clickhouse://localhost:8123/default?user=default&password=&ssl=false&compress=false
     username: default
@@ -18,7 +20,7 @@ spring:
         registration:
           keycloak:
             client-id: ${KEYCLOAK_CLIENT_ID:sampledashboard}
-            client-secret: ${KEYCLOAK_CLIENT_SECRET:0DuNmRVBFymNZYjbTGJDnWpGrAYsU580}
+            client-secret: ${KEYCLOAK_CLIENT_SECRET:your_client_secret}
             scope:
               - openid
               - profile
@@ -27,7 +29,7 @@ spring:
             redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
         provider:
           keycloak:
-            issuer-uri: ${KEYCLOAK_ISSUER_URI:http://192.168.50.241:7080/realms/birunix}
+            issuer-uri: ${KEYCLOAK_ISSUER_URI:http://localhost:8080/realms/your_realm}
             user-name-attribute: preferred_username
 
 server:
