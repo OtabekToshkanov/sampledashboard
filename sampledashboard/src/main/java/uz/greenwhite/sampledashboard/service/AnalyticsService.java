@@ -1,6 +1,6 @@
 package uz.greenwhite.sampledashboard.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Service;
@@ -13,10 +13,9 @@ import java.sql.SQLException;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class AnalyticsService {
-
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
     public List<DealSummary> getDealSummary() {
         String sql = """
