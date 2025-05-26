@@ -10,8 +10,6 @@ A Spring Boot application that provides real-time analytics dashboards for sales
 - **ClickHouse Integration**: High-performance analytics on large datasets
 - **Responsive UI**: Clean, modern interface with Thymeleaf templates
 
-## Screenshots
-
 ### Dashboard View
 - Deal summary by type (Orders vs Returns)
 - Daily sales performance for last 30 days
