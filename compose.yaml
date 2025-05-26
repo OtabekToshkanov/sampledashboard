@@ -1,24 +1,53 @@
 services:
   clickhouse:
     image: clickhouse/clickhouse-server:latest
-    container_name: clickhouse-server
     hostname: clickhouse
+    restart: unless-stopped
     ports:
-      - "8123:8123"   # HTTP interface
-      - "9000:9000"   # Native TCP interface
-      - "9009:9009"   # HTTP interface with SSL
+      - 8123:8123
     volumes:
       - clickhouse_data:/var/lib/clickhouse/
       - clickhouse_logs:/var/log/clickhouse-server/
     environment:
       - CLICKHOUSE_DB=default
       - CLICKHOUSE_USER=default
+      - CLICKHOUSE_PASSWORD=your_secure_password_here
       - CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT=1
     ulimits:
       nofile:
         soft: 262144
         hard: 262144
+    healthcheck:
+      test: ["CMD", "clickhouse-client", "--query", "SELECT 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  app:
+    image: ghcr.io/otabektoshkanov/sampledashboard:latest
     restart: unless-stopped
+    ports:
+      - 8181:8181
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    volumes:
+      - ./sampledashboard/.env:/app/.env
+    depends_on:
+      clickhouse:
+        condition: service_healthy
+
+  clickhouse-ui:
+    image: ghcr.io/caioricciuti/ch-ui:latest
+    restart: unless-stopped
+    ports:
+      - 5521:5521
+    environment:
+      - VITE_CLICKHOUSE_URL=http://clickhouse:8123
+      - VITE_CLICKHOUSE_USER=default
+      - VITE_CLICKHOUSE_PASS=your_secure_password_here
+    depends_on:
+      clickhouse:
+        condition: service_healthy
 
 volumes:
   clickhouse_data:
