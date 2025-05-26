@@ -80,7 +80,14 @@ public class LogoutController {
     }
 
     @GetMapping("/logged-out")
-    public String loggedOut() {
+    public String loggedOut(HttpServletRequest request) {
+        // Ensure the session is completely invalidated
+        try {
+            request.getSession().invalidate();
+        } catch (Exception e) {
+            // Session might already be invalidated
+        }
+
         log.info("User successfully logged out");
         return "logged-out";
     }
