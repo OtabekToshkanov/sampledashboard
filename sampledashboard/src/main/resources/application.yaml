@@ -12,10 +12,37 @@ spring:
       maximum-pool-size: 10
       minimum-idle: 5
 
+  security:
+    oauth2:
+      client:
+        registration:
+          keycloak:
+            client-id: ${KEYCLOAK_CLIENT_ID:sampledashboard}
+            client-secret: ${KEYCLOAK_CLIENT_SECRET:0DuNmRVBFymNZYjbTGJDnWpGrAYsU580}
+            scope:
+              - openid
+              - profile
+              - email
+            authorization-grant-type: authorization_code
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+        provider:
+          keycloak:
+            issuer-uri: ${KEYCLOAK_ISSUER_URI:http://192.168.50.241:7080/realms/birunix}
+            user-name-attribute: preferred_username
+
 server:
-  port: 8080
+  port: 8181
+
+# Custom application properties
+app:
+  keycloak:
+    company-id-attribute: companyId
+    user-id-attribute: userId
+    name-attribute: fullName
 
 logging:
   level:
     com.clickhouse: DEBUG
     org.springframework.jdbc: DEBUG
+    org.springframework.security: DEBUG
+    org.springframework.security.oauth2: DEBUG

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logged Out - ClickHouse Analytics</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: center;
+            padding-top: 100px;
+        }
+
+        .logout-card {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .logout-icon {
+            font-size: 4rem;
+            color: #28a745;
+            margin-bottom: 20px;
+        }
+
+        .logout-title {
+            color: #28a745;
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .logout-message {
+            color: #6c757d;
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+        }
+
+        .login-btn {
+            display: inline-block;
+            padding: 12px 24px;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+            font-size: 1.1rem;
+        }
+
+        .login-btn:hover {
+            background: #5a6fd8;
+            color: white;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="logout-card">
+        <div class="logout-icon">👋</div>
+        <h1 class="logout-title">Successfully Logged Out</h1>
+        <p class="logout-message">
+            You have been successfully logged out from both the ClickHouse Analytics Dashboard and Keycloak.
+            <br><br>
+            All your sessions have been terminated.
+            <br><br>
+            Thank you for using our service!
+        </p>
+
+        <a href="/" class="login-btn">🔐 Login Again</a>
+    </div>
+</div>
+</body>
+</html>

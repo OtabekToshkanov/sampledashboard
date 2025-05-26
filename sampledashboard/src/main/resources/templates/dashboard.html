@@ -18,7 +18,52 @@
             padding: 20px;
             border-radius: 10px;
             margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-content {
             text-align: center;
+            flex-grow: 1;
+        }
+
+        .user-info {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px 15px;
+            border-radius: 8px;
+            text-align: right;
+            min-width: 200px;
+        }
+
+        .user-info h4 {
+            margin: 0 0 5px 0;
+            font-size: 14px;
+        }
+
+        .user-info p {
+            margin: 0;
+            font-size: 12px;
+            opacity: 0.9;
+        }
+
+        .logout-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 5px 10px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 12px;
+            margin-top: 5px;
+            display: inline-block;
+            transition: background-color 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            color: white;
+            text-decoration: none;
         }
 
         .container {
@@ -39,6 +84,13 @@
             border-bottom: 2px solid #667eea;
             padding-bottom: 10px;
             margin-bottom: 20px;
+        }
+
+        .no-data {
+            text-align: center;
+            color: #666;
+            font-style: italic;
+            padding: 40px;
         }
 
         table {
@@ -87,26 +139,59 @@
             color: #28a745;
         }
 
-        .negative {
-            color: #dc3545;
-        }
-
         .neutral {
             color: #6c757d;
+        }
+
+        .company-chip {
+            background: #667eea;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+        }
+
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border: 1px solid #f5c6cb;
         }
     </style>
 </head>
 <body>
 <div class="container">
+    <!-- Error Message -->
+    <div th:if="${error}" class="error-message">
+        <strong>Error:</strong> <span th:text="${error}"></span>
+    </div>
+
     <div class="header">
-        <h1>📊 ClickHouse Analytics Dashboard</h1>
-        <p>Real-time insights from mdeal_headers table</p>
+        <div class="header-content">
+            <h1>📊 ClickHouse Analytics Dashboard</h1>
+            <p>Real-time insights from mdeal_headers table</p>
+        </div>
+
+        <!-- User Info Section -->
+        <div class="user-info" th:if="${currentUser}">
+            <h4 th:text="${currentUser.name}">User Name</h4>
+            <p th:text="'@' + ${currentUser.username}">@username</p>
+            <div th:if="${currentUser.companyId}">
+                <span class="company-chip" th:text="'Company ' + ${currentUser.companyId}">Company ID</span>
+            </div>
+            <a href="/logout" class="logout-btn">Logout</a>
+        </div>
     </div>
 
     <!-- Deal Summary Section -->
     <div class="section">
         <h2>📈 Deal Summary by Type</h2>
-        <table>
+        <div th:if="${#lists.isEmpty(dealSummary)}" class="no-data">
+            No deal data available for your companies.
+        </div>
+        <table th:if="${not #lists.isEmpty(dealSummary)}">
             <thead>
             <tr>
                 <th>Deal Kind</th>
@@ -134,8 +219,11 @@
 
     <!-- Daily Sales Section -->
     <div class="section">
-        <h2>📅 Daily Sales Performance</h2>
-        <table>
+        <h2>📅 Daily Sales Performance (Last 30 Days)</h2>
+        <div th:if="${#lists.isEmpty(dailySales)}" class="no-data">
+            No daily sales data available for your companies.
+        </div>
+        <table th:if="${not #lists.isEmpty(dailySales)}">
             <thead>
             <tr>
                 <th>Deal Date</th>
@@ -159,8 +247,11 @@
 
     <!-- Company Analytics Section -->
     <div class="section">
-        <h2>🏢 Company Performance Analytics</h2>
-        <table>
+        <h2>🏢 Your Company Performance Analytics</h2>
+        <div th:if="${#lists.isEmpty(companyAnalytics)}" class="no-data">
+            No company analytics data available.
+        </div>
+        <table th:if="${not #lists.isEmpty(companyAnalytics)}">
             <thead>
             <tr>
                 <th>Company ID</th>
@@ -189,9 +280,9 @@
     </div>
 
     <!-- Quick Metrics -->
-    <div class="section">
+    <div class="section" th:if="${not #lists.isEmpty(dealSummary)}">
         <h2>⚡ Quick Metrics</h2>
-        <div th:if="${not #lists.isEmpty(dealSummary)}">
+        <div>
             <div class="metric">
                 <div class="metric-value"
                      th:text="${dealSummary[0].totalDeals + (dealSummary.size() > 1 ? dealSummary[1].totalDeals : 0)}"></div>
@@ -204,7 +295,11 @@
             </div>
             <div class="metric" th:if="${companyAnalytics.size() > 0}">
                 <div class="metric-value" th:text="${companyAnalytics.size()}"></div>
-                <div class="metric-label">Active Companies</div>
+                <div class="metric-label">Your Companies</div>
+            </div>
+            <div class="metric" th:if="${currentUser}">
+                <div class="metric-value">1</div>
+                <div class="metric-label">Your Company</div>
             </div>
         </div>
     </div>
