@@ -9,7 +9,7 @@
     </parent>
     <groupId>uz.greenwhite</groupId>
     <artifactId>sampledashboard</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.1</version>
     <name>sampledashboard</name>
     <description>ClickHouse Analytics Dashboard</description>
 
@@ -58,13 +58,6 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>
-        </dependency>
-
-        <!-- Test Dependencies -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
         </dependency>
     </dependencies>
 

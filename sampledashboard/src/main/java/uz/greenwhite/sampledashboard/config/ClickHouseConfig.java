@@ -25,7 +25,7 @@ public class ClickHouseConfig {
         dataSource.setDriverClassName("com.clickhouse.jdbc.ClickHouseDriver");
 
         // Build URL with explicit parameters
-        String fullUrl = "jdbc:clickhouse://localhost:8123/default" +
+        String fullUrl = url +
                 "?user=" + username +
                 "&password=" + (password != null ? password : "") +
                 "&ssl=false" +

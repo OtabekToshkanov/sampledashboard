@@ -2,9 +2,9 @@ spring:
   config:
     import: 'optional:file:.env[.properties]'
   datasource:
-    url: jdbc:clickhouse://localhost:8123/default?user=default&password=&ssl=false&compress=false
-    username: default
-    password: ""
+    url: ${CLICKHOUSE_URL:jdbc:clickhouse://localhost:8123/default}
+    username: ${CLICKHOUSE_USER:default}
+    password: ${CLICKHOUSE_PASSOWRD:your_secure_password}
     driver-class-name: com.clickhouse.jdbc.ClickHouseDriver
     hikari:
       connection-test-query: SELECT 1
@@ -37,14 +37,8 @@ server:
 
 # Custom application properties
 app:
+  url: ${APPLICATION_URL:http://localhost:8181}
   keycloak:
     company-id-attribute: companyId
     user-id-attribute: userId
     name-attribute: fullName
-
-logging:
-  level:
-    com.clickhouse: DEBUG
-    org.springframework.jdbc: DEBUG
-    org.springframework.security: DEBUG
-    org.springframework.security.oauth2: DEBUG

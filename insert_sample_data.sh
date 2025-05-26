@@ -4,7 +4,7 @@
 CLICKHOUSE_HOST="localhost"
 CLICKHOUSE_PORT="8123"
 CLICKHOUSE_USER="default"
-CLICKHOUSE_PASSWORD=""
+CLICKHOUSE_PASSWORD="your_secure_password_here"
 
 echo "Inserting sample data into mdeal_headers table..."
 

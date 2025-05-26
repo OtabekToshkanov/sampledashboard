@@ -19,12 +19,10 @@ import java.io.IOException;
 public class LogoutController {
     @Value("${spring.security.oauth2.client.provider.keycloak.issuer-uri}")
     private String issuerUri;
-
     @Value("${spring.security.oauth2.client.registration.keycloak.client-id}")
     private String clientId;
-
-    @Value("${server.port:8181}")
-    private String serverPort;
+    @Value("${app.url}")
+    private String applicationUrl;
 
     @GetMapping("/logout")
     public void logout(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
@@ -57,8 +55,7 @@ public class LogoutController {
     }
 
     private String buildKeycloakLogoutUrl(String idToken) {
-        String baseUrl = "http://localhost:" + serverPort;
-        String postLogoutRedirectUri = baseUrl + "/logged-out";
+        String postLogoutRedirectUri = applicationUrl + "/logged-out";
 
         UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(issuerUri + "/protocol/openid-connect/logout");
 

@@ -4,7 +4,7 @@
 CLICKHOUSE_HOST="localhost"
 CLICKHOUSE_PORT="8123"
 CLICKHOUSE_USER="default"
-CLICKHOUSE_PASSWORD=""
+CLICKHOUSE_PASSWORD="your_secure_password_here"
 
 # Create the table using curl
 curl -X POST "http://${CLICKHOUSE_HOST}:${CLICKHOUSE_PORT}/" \
